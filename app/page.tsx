@@ -16,6 +16,7 @@ export default function Home() {
   const [lastSearch, setLastSearch] = useState<SearchParams | null>(null);
   const [alertRefresh, setAlertRefresh] = useState(0);
   const [notifPermission, setNotifPermission] = useState<NotificationPermission>('default');
+  const [dataSource, setDataSource] = useState<'live' | 'mock'>('mock');
 
   useEffect(() => {
     if ('Notification' in window) {
@@ -34,9 +35,30 @@ export default function Home() {
     setLoading(true);
     setLastSearch(params);
     setTab('search');
-    await new Promise(r => setTimeout(r, 400));
-    const results = generateSchedules(params.departure, params.arrival, params.date, params.type);
-    setSchedules(results);
+
+    try {
+      const qs = new URLSearchParams({
+        departure: params.departure,
+        arrival: params.arrival,
+        date: params.date,
+        type: params.type,
+      });
+      const res = await fetch(`/api/schedules?${qs}`);
+      const json = await res.json();
+
+      if (res.ok && json.schedules) {
+        setSchedules(json.schedules);
+        setDataSource('live');
+      } else {
+        throw new Error(json.error ?? 'api error');
+      }
+    } catch {
+      // API key 미설정 또는 오류 → mock 데이터 사용
+      const results = generateSchedules(params.departure, params.arrival, params.date, params.type);
+      setSchedules(results);
+      setDataSource('mock');
+    }
+
     setLoading(false);
   }
 
@@ -99,10 +121,16 @@ export default function Home() {
             {!loading && schedules !== null && (
               <>
                 {lastSearch && (
-                  <div className="text-sm text-gray-500 font-medium flex items-center gap-1">
-                    <span>{lastSearch.date}</span>
-                    <span>·</span>
-                    <span className="text-gray-800 font-semibold">{lastSearch.departure} → {lastSearch.arrival}</span>
+                  <div className="text-sm text-gray-500 font-medium flex items-center justify-between">
+                    <div className="flex items-center gap-1">
+                      <span>{lastSearch.date}</span>
+                      <span>·</span>
+                      <span className="text-gray-800 font-semibold">{lastSearch.departure} → {lastSearch.arrival}</span>
+                    </div>
+                    {dataSource === 'live'
+                      ? <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">실시간</span>
+                      : <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">샘플 데이터</span>
+                    }
                   </div>
                 )}
                 <ScheduleResults schedules={schedules} onAlertCreated={handleAlertCreated} />
