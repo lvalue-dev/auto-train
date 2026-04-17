@@ -1,4 +1,4 @@
-export type TransportType = 'KTX' | 'ITX' | 'MUGUNGHWA' | 'EXPRESS_BUS' | 'INTERCITY_BUS';
+export type TransportType = 'KTX' | 'SRT' | 'ITX' | 'MUGUNGHWA' | 'EXPRESS_BUS' | 'INTERCITY_BUS';
 
 export interface Station {
   code: string;

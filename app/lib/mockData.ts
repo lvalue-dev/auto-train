@@ -3,13 +3,13 @@ import { Station, Schedule, TransportType } from './types';
 export const TRAIN_STATIONS: Station[] = [
   { code: 'SEO', name: '서울', type: 'train' },
   { code: 'YON', name: '용산', type: 'train' },
+  { code: 'SUS', name: '수서(SRT)', type: 'train' },
   { code: 'SUW', name: '수원', type: 'train' },
   { code: 'DAJ', name: '대전', type: 'train' },
   { code: 'DGU', name: '동대구', type: 'train' },
   { code: 'PSN', name: '부산', type: 'train' },
   { code: 'GWJ', name: '광주송정', type: 'train' },
   { code: 'MOK', name: '목포', type: 'train' },
-  { code: 'JEJ', name: '제주', type: 'train' },
   { code: 'CHN', name: '천안아산', type: 'train' },
   { code: 'OSN', name: '오송', type: 'train' },
   { code: 'GYG', name: '경주', type: 'train' },
@@ -19,13 +19,17 @@ export const TRAIN_STATIONS: Station[] = [
   { code: 'WOJ', name: '원주', type: 'train' },
   { code: 'CHJ', name: '청주', type: 'train' },
   { code: 'JEJ2', name: '전주', type: 'train' },
+  { code: 'DTN', name: '동탄', type: 'train' },
+  { code: 'PTJ', name: '평택지제', type: 'train' },
+  { code: 'GJG', name: '김천구미', type: 'train' },
+  { code: 'GJN', name: '공주', type: 'train' },
+  { code: 'IKS', name: '익산', type: 'train' },
 ];
 
 export const BUS_TERMINALS: Station[] = [
   { code: 'SEO_B', name: '서울경부(고속)', type: 'bus' },
   { code: 'SEO_S', name: '서울남부(시외)', type: 'bus' },
   { code: 'SEO_D', name: '동서울(시외)', type: 'bus' },
-  { code: 'SEO_H', name: '서울홍천(시외)', type: 'bus' },
   { code: 'INH', name: '인천(고속)', type: 'bus' },
   { code: 'SUW_B', name: '수원(시외)', type: 'bus' },
   { code: 'DAJ_B', name: '대전복합(고속)', type: 'bus' },
@@ -42,6 +46,7 @@ export const ALL_STATIONS = [...TRAIN_STATIONS, ...BUS_TERMINALS];
 
 const TRANSPORT_LABELS: Record<TransportType, string> = {
   KTX: 'KTX',
+  SRT: 'SRT',
   ITX: 'ITX-새마을',
   MUGUNGHWA: '무궁화',
   EXPRESS_BUS: '고속버스',
@@ -54,6 +59,7 @@ export function getTransportLabel(type: TransportType): string {
 
 export const TRANSPORT_COLORS: Record<TransportType, string> = {
   KTX: 'bg-red-500',
+  SRT: 'bg-sky-600',
   ITX: 'bg-blue-500',
   MUGUNGHWA: 'bg-green-600',
   EXPRESS_BUS: 'bg-orange-500',
@@ -62,6 +68,7 @@ export const TRANSPORT_COLORS: Record<TransportType, string> = {
 
 export const TRANSPORT_TEXT_COLORS: Record<TransportType, string> = {
   KTX: 'text-red-600',
+  SRT: 'text-sky-700',
   ITX: 'text-blue-600',
   MUGUNGHWA: 'text-green-700',
   EXPRESS_BUS: 'text-orange-600',
@@ -104,26 +111,43 @@ interface RouteTemplate {
 }
 
 const ROUTE_TEMPLATES: RouteTemplate[] = [
-  // Seoul - Busan KTX
+  // KTX 서울 - 부산
   { type: 'KTX', trainNo: 'KTX 101', departureCode: 'SEO', departureName: '서울', arrivalCode: 'PSN', arrivalName: '부산', times: ['05:30', '06:00', '06:30', '07:00', '07:30', '08:00', '08:30', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'], durationMins: 160, price: 59800 },
   { type: 'KTX', trainNo: 'KTX 103', departureCode: 'YON', departureName: '용산', arrivalCode: 'PSN', arrivalName: '부산', times: ['06:15', '07:15', '09:15', '11:15', '14:15', '17:15', '20:15'], durationMins: 155, price: 59800 },
-  { type: 'ITX', trainNo: 'ITX 1001', departureCode: 'SEO', departureName: '서울', arrivalCode: 'PSN', arrivalName: '부산', times: ['07:00', '09:00', '12:00', '15:00', '18:00'], durationMins: 240, price: 42600 },
-  { type: 'MUGUNGHWA', trainNo: '무궁화 1201', departureCode: 'SEO', departureName: '서울', arrivalCode: 'PSN', arrivalName: '부산', times: ['07:30', '11:00', '15:30', '19:00'], durationMins: 340, price: 28600 },
-  // Seoul - Daejeon
+  // KTX 서울 - 대전
   { type: 'KTX', trainNo: 'KTX 201', departureCode: 'SEO', departureName: '서울', arrivalCode: 'DAJ', arrivalName: '대전', times: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'], durationMins: 50, price: 23700 },
-  { type: 'ITX', trainNo: 'ITX 2001', departureCode: 'SEO', departureName: '서울', arrivalCode: 'DAJ', arrivalName: '대전', times: ['06:30', '09:30', '13:00', '16:30', '20:00'], durationMins: 90, price: 15300 },
-  // Seoul - Gwangju
+  // KTX 용산 - 광주송정
   { type: 'KTX', trainNo: 'KTX 401', departureCode: 'YON', departureName: '용산', arrivalCode: 'GWJ', arrivalName: '광주송정', times: ['06:20', '07:20', '08:20', '09:20', '10:20', '12:20', '14:20', '16:20', '18:20', '20:20'], durationMins: 95, price: 46800 },
-  // Seoul - Gangneung
+  // KTX 서울 - 강릉
   { type: 'KTX', trainNo: 'KTX 801', departureCode: 'SEO', departureName: '서울', arrivalCode: 'GNW', arrivalName: '강릉', times: ['06:30', '08:00', '09:30', '11:00', '13:00', '15:00', '17:00', '19:00'], durationMins: 108, price: 27600 },
-  // Express Bus Seoul - Busan
+
+  // SRT 수서 - 부산
+  { type: 'SRT', trainNo: 'SRT 301', departureCode: 'SUS', departureName: '수서(SRT)', arrivalCode: 'PSN', arrivalName: '부산', times: ['05:20', '06:00', '06:40', '07:20', '08:00', '08:40', '09:20', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'], durationMins: 155, price: 52700 },
+  // SRT 수서 - 동대구
+  { type: 'SRT', trainNo: 'SRT 311', departureCode: 'SUS', departureName: '수서(SRT)', arrivalCode: 'DGU', arrivalName: '동대구', times: ['06:10', '07:30', '09:00', '11:00', '13:00', '15:30', '17:30', '19:30'], durationMins: 100, price: 39500 },
+  // SRT 수서 - 대전
+  { type: 'SRT', trainNo: 'SRT 321', departureCode: 'SUS', departureName: '수서(SRT)', arrivalCode: 'DAJ', arrivalName: '대전', times: ['06:30', '08:00', '09:30', '11:00', '13:00', '15:00', '17:00', '19:00', '21:00'], durationMins: 48, price: 21500 },
+  // SRT 수서 - 광주송정
+  { type: 'SRT', trainNo: 'SRT 401', departureCode: 'SUS', departureName: '수서(SRT)', arrivalCode: 'GWJ', arrivalName: '광주송정', times: ['06:50', '08:30', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00'], durationMins: 93, price: 41400 },
+  // SRT 수서 - 목포
+  { type: 'SRT', trainNo: 'SRT 411', departureCode: 'SUS', departureName: '수서(SRT)', arrivalCode: 'MOK', arrivalName: '목포', times: ['07:10', '09:10', '11:10', '13:10', '15:10', '17:10', '19:10'], durationMins: 135, price: 55400 },
+
+  // ITX 서울 - 부산
+  { type: 'ITX', trainNo: 'ITX 1001', departureCode: 'SEO', departureName: '서울', arrivalCode: 'PSN', arrivalName: '부산', times: ['07:00', '09:00', '12:00', '15:00', '18:00'], durationMins: 240, price: 42600 },
+  // ITX 서울 - 대전
+  { type: 'ITX', trainNo: 'ITX 2001', departureCode: 'SEO', departureName: '서울', arrivalCode: 'DAJ', arrivalName: '대전', times: ['06:30', '09:30', '13:00', '16:30', '20:00'], durationMins: 90, price: 15300 },
+
+  // 무궁화 서울 - 부산
+  { type: 'MUGUNGHWA', trainNo: '무궁화 1201', departureCode: 'SEO', departureName: '서울', arrivalCode: 'PSN', arrivalName: '부산', times: ['07:30', '11:00', '15:30', '19:00'], durationMins: 340, price: 28600 },
+
+  // 고속버스 서울 - 부산
   { type: 'EXPRESS_BUS', trainNo: '경부선 고속', departureCode: 'SEO_B', departureName: '서울경부(고속)', arrivalCode: 'PSN_B', arrivalName: '부산(고속)', times: ['06:00', '06:30', '07:00', '07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00'], durationMins: 240, price: 28600 },
   { type: 'EXPRESS_BUS', trainNo: '경부 우등', departureCode: 'SEO_B', departureName: '서울경부(고속)', arrivalCode: 'PSN_B', arrivalName: '부산(고속)', times: ['07:00', '09:00', '11:00', '13:00', '15:00', '17:00', '19:00', '21:00'], durationMins: 240, price: 37700 },
-  // Express Bus Seoul - Daejeon
+  // 고속버스 서울 - 대전
   { type: 'EXPRESS_BUS', trainNo: '대전 고속', departureCode: 'SEO_B', departureName: '서울경부(고속)', arrivalCode: 'DAJ_B', arrivalName: '대전복합(고속)', times: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'], durationMins: 100, price: 9500 },
-  // Intercity Bus Seoul - Gangneung
+  // 시외버스 동서울 - 강릉
   { type: 'INTERCITY_BUS', trainNo: '강릉 시외', departureCode: 'SEO_D', departureName: '동서울(시외)', arrivalCode: 'GNW_B', arrivalName: '강릉(시외)', times: ['06:30', '07:30', '08:30', '09:30', '10:30', '11:30', '12:30', '13:30', '14:30', '15:30', '16:30', '17:30', '18:30'], durationMins: 155, price: 18600 },
-  // Intercity Bus Seoul - Sokcho
+  // 시외버스 동서울 - 속초
   { type: 'INTERCITY_BUS', trainNo: '속초 시외', departureCode: 'SEO_D', departureName: '동서울(시외)', arrivalCode: 'SKC', arrivalName: '속초(시외)', times: ['07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'], durationMins: 185, price: 22400 },
 ];
 
